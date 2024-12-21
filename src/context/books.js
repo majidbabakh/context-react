@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useCallback } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -14,19 +14,19 @@ function Provide({ children }) {
     setBooks([...books, response.data]);
   };
 
-  const fetchBooks = () => {
-    axios.get('http://localhost:3001/books').then((res) => {
+  const fetchBooks = useCallback(async () => {
+    await axios.get('http://localhost:3001/books').then((res) => {
       setBooks(res.data);
     });
-  };
+  }, []);
 
-  const handleDeleteBook = (id) => {
-    axios.delete(`http://localhost:3001/books/${id}`);
+  const handleDeleteBook = async (id) => {
+    await axios.delete(`http://localhost:3001/books/${id}`);
     setBooks(books.filter((book) => book.id !== id));
   };
 
-  function handleEditBook(id, newTitle) {
-    axios
+  async function handleEditBook(id, newTitle) {
+    await axios
       .put(`http://localhost:3001/books/${id}`, {
         title: newTitle
       })
